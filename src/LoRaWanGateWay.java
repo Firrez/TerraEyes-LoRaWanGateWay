@@ -85,5 +85,11 @@ public class LoRaWanGateWay implements WebSocket.Listener {
     private void sendTelegrams() {
         List<String> EUIs = BusinessLink.getFeedRequests();
 
+        for (String eui : EUIs)
+        {
+            DownLinkTelegram telegram = new DownLinkTelegram(eui);
+            String jsonTelegram = new JSONObject(telegram).toString();
+            sendDownLink(jsonTelegram);
+        }
     }
 }

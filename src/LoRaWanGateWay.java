@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -57,6 +58,7 @@ public class LoRaWanGateWay implements WebSocket.Listener {
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = (new JSONObject(data.toString())).toString(4);
         sendData(indented);
+        sendTelegrams();
         webSocket.request(1);
         return CompletableFuture.completedFuture("onText() completed").thenAccept(System.out::println);
     }
@@ -78,5 +80,10 @@ public class LoRaWanGateWay implements WebSocket.Listener {
             System.out.println("ERROR, failed to send data!");
         else
             System.out.println("Error code: " + statusCode);
+    }
+
+    private void sendTelegrams() {
+        List<String> EUIs = BusinessLink.getFeedRequests();
+
     }
 }

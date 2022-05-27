@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+import java.util.List;
 
 public class BusinessLink {
     private static final String url;
@@ -16,6 +18,7 @@ public class BusinessLink {
 
     static {
         url = "http://terraeyes.azurewebsites.net/Terrarium";
+        //url = "http://localhost:5000/Terrarium";
         gson = new Gson();
         client = HttpClient.newBuilder().build();
     }
@@ -33,16 +36,26 @@ public class BusinessLink {
                     .build();
             HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.discarding());
             return response.statusCode();
-        }
-        catch (InterruptedException | IOException e)
-        {
+        } catch (InterruptedException | IOException e) {
             System.out.println("Error message: " + e.getMessage());
             return -1;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    public static List<String> getFeedRequests() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .header("Content-Type", "application/json")
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+            HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return Arrays.asList(gson.fromJson(response.body().toString(), String[].class));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

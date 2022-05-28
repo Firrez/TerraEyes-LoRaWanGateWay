@@ -31,7 +31,7 @@ public class LoRaWanGateWay implements WebSocket.Listener {
 
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("A(n) " + error.getCause() + " was thrown.");
-        System.out.println("Message: " + error.getLocalizedMessage());
+        error.printStackTrace();
         webSocket.abort();
     }
 
@@ -85,6 +85,7 @@ public class LoRaWanGateWay implements WebSocket.Listener {
     private void sendTelegrams() {
         List<String> EUIs = BusinessLink.getFeedRequests();
 
+        if (EUIs == null) return;
         for (String eui : EUIs)
         {
             DownLinkTelegram telegram = new DownLinkTelegram(eui);

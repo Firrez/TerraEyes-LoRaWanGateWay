@@ -17,8 +17,8 @@ public class BusinessLink {
     public static final int SUCCESS_CODE = 200;
 
     static {
-        url = "http://terraeyes.azurewebsites.net/Terrarium";
-        //url = "http://localhost:5000/Terrarium";
+        url = "http://terraeyes.azurewebsites.net/Terrarium"; //
+        //url = "http://localhost:5000/Terrarium"; //TEST URL
         gson = new Gson();
         client = HttpClient.newBuilder().build();
     }
@@ -48,12 +48,12 @@ public class BusinessLink {
     public static List<String> getFeedRequests() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .header("Content-Type", "application/json")
                     .uri(URI.create(url))
                     .GET()
                     .build();
-            HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return Arrays.asList(gson.fromJson(response.body().toString(), String[].class));
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.body() == null || response.body().isEmpty()) return null;
+            return Arrays.asList(gson.fromJson(response.body(), String[].class));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

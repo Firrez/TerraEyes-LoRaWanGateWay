@@ -67,8 +67,6 @@ public class LoRaWanGateWay implements WebSocket.Listener {
         int statusCode;
         RawData rawData = DataCleaner.clean(data);
 
-        System.out.println(rawData.getEUI());
-
         if (rawData.getCmd().equals("gw"))
             statusCode = BusinessLink.sendRawData(rawData);
         else
@@ -88,6 +86,7 @@ public class LoRaWanGateWay implements WebSocket.Listener {
         if (EUIs == null) return;
         for (String eui : EUIs)
         {
+            System.out.println("Telegram sent to EUI: " + eui);
             DownLinkTelegram telegram = new DownLinkTelegram(eui);
             String jsonTelegram = new JSONObject(telegram).toString();
             sendDownLink(jsonTelegram);
